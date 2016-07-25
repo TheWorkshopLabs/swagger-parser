@@ -1,5 +1,6 @@
 sudo: false
 language: java
+install: true
 script: mvn verify
 after_success: mvn deploy -Dmaven.test.skip=true --settings settings.xml
 jdk:
