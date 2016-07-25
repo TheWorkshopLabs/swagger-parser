@@ -6,18 +6,11 @@
     <artifactId>swagger-parser-project</artifactId>
     <version>1.0.22-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <name>swagger-parser-project</name>
-    <developers>
-        <developer>
-            <id>jaserrano</id>
-            <name>Javier Serrano</name>
-            <email>jaserrano@theworkshop.com</email>
-        </developer>
-    </developers>
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/swagger-api/swagger-parser/issues</url>
-    </issueManagement>
+    <description>Reads OpenAPI Specifications into current Java POJOs</description>
+    <url>https://github.com/TheWorkshopLabs/swagger-parser</url>
+
     <licenses>
         <license>
             <name>Apache License 2.0</name>
@@ -25,6 +18,26 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <id>jaserrano</id>
+            <name>Javier Serrano</name>
+            <email>jaserrano@theworkshop.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/TheWorkshopLabs/wagger-parser.git</connection>
+        <developerConnection>scm:git:ssh://github.com:TheWorkshopLabs/swagger-parser.git</developerConnection>
+        <url>https://github.com/TheWorkshopLabs/swagger-parser/tree/master</url>
+    </scm>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/swagger-api/swagger-parser/issues</url>
+    </issueManagement>
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -35,6 +48,7 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
     <build>
         <defaultGoal>install</defaultGoal>
         <resources>
