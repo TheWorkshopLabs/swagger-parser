@@ -279,14 +279,4 @@
         </repository>
     </distributionManagement>
 
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://raw.github.com/TheWorkshopLabs/swagger-parser/mvn-repo/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>
