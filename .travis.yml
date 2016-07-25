@@ -1,5 +1,9 @@
 sudo: false
 language: java
+install: true
 script: mvn verify
 jdk:
-  - oraclejdk7
+- oraclejdk7
+env:
+  global:
+    secure: kJqixADXl65Knmde+JQ7fmFrzOSqugW/nN7RFNvN8l76wAtkHXk/Hb269WVZPtGiUpNYb4b20jhu0uGxi44CTTC6xmOdhAcKyGuWAn1UJcQRCEgirJYmVBqiyUEIrx9FZzV8n6KSkuie/fyCUQmK2XOnLRjPe70GdsJDSYK8fJse5veFqp8DbXriHaL8a4AGiJ7nPX8uxXkYENb6H2KnpvybxkvMPC2Vytvb1k4qrR+k0NcQjIA17nJ69gGr8LtkuIYVo8lOvhiaJcZkCm+VkaRvFQiDZjocg/tJmEcUV9h6DSL+IS98tU0C/Vr7EFiZOG2/pwsW3HscU3pEsRhkfRZ+fvGhf9YlIuF+SrF79VwWG4h5VmxDTXh2xypgwMRyyy0gt6YmvRf5JVRoAibOg2r+i1wAjKd2b+nustl8rSTHxoMtOdo+asgDQDwv2jzRMYGbArHxmcmDh8CA6dbEuFR4ssU8ct0OSM1+/HQuPr+jbKRSJV+rWLb02S4ezbq/pUc9gnBQvEprPDNo+Dsqg2BM42d8x/qrePOnLQH28AZt7WCmy9m6H0onZbuo+icgDmucZ1GK8CYGxaypi3B17+TCmQV8S0LmqJnBLAzJoXOCqeoQbLG+zQJ5SY0r18t63tfPSaO3qwitzhsrA9xjN8cNI09/utrW9QC9YqwUTZk=
