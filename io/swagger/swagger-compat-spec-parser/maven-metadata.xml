@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>io.swagger</groupId>
+  <artifactId>swagger-compat-spec-parser</artifactId>
+  <versioning>
+    <versions>
+      <version>1.0.22-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20160725094940</lastUpdated>
+  </versioning>
+</metadata>
