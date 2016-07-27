@@ -3,8 +3,8 @@ language: java
 install: true
 script: mvn verify
 after_success:
-- "./deploy/before-deploy.sh"
-- "./deploy/deploy.sh"
+- "./.travis/before-deploy.sh"
+- "./.travis/deploy.sh"
 jdk:
 - oraclejdk7
 env:
