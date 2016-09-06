@@ -1,5 +1,6 @@
 package io.swagger.parser;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.models.*;
 import io.swagger.models.parameters.*;
 import io.swagger.models.properties.ArrayProperty;
@@ -91,9 +92,109 @@ public class SwaggerParserTest {
     }
 
     @Test
+    public void testParseRefPathParameters() throws Exception {
+        String yaml =
+                "swagger: '2.0'\n" +
+                "info:\n" +
+                "  title: test\n" +
+                "  version: '0.0.0'\n" +
+                "parameters:\n" +
+                "  report-id:\n" +
+                "    name: id\n" +
+                "    in: path\n" +
+                "    type: string\n" +
+                "    required: true\n" +
+                "paths:\n" +
+                "  /reports/{id}:\n" +
+                "    parameters:\n" +
+                "        - $ref: '#/parameters/report-id'\n" +
+                "    put:\n" +
+                "      parameters:\n" +
+                "        - name: id\n" +
+                "          in: body\n" +
+                "          required: true\n" +
+                "          schema:\n" +
+                "            $ref: '#/definitions/report'\n" +
+                "      responses:\n" +
+                "        200:\n" +
+                "          description: ok\n" +
+                "definitions:\n" +
+                "  report:\n" +
+                "    type: object\n" +
+                "    properties:\n" +
+                "      id:\n" +
+                "        type: string\n" +
+                "      name:\n" +
+                "        type: string\n" +
+                "    required:\n" +
+                "    - id\n" +
+                "    - name\n";
+        SwaggerParser parser = new SwaggerParser();
+        Swagger swagger = parser.parse(yaml);
+    }
+
+    @Test
+    public void testUniqueParameters() throws Exception {
+        String yaml =
+                "swagger: '2.0'\n" +
+                "info:\n" +
+                "  title: test\n" +
+                "  version: '0.0.0'\n" +
+                "parameters:\n" +
+                "  foo-id:\n" +
+                "    name: id\n" +
+                "    in: path\n" +
+                "    type: string\n" +
+                "    required: true\n" +
+                "paths:\n" +
+                "  /foos/{id}:\n" +
+                "    parameters:\n" +
+                "        - $ref: '#/parameters/foo-id'\n" +
+                "    get:\n" +
+                "      responses:\n" +
+                "        200:\n" +
+                "          schema:\n" +
+                "            $ref: '#/definitions/foo'\n" +
+                "    put:\n" +
+                "      parameters:\n" +
+                "        - name: foo\n" +
+                "          in: body\n" +
+                "          required: true\n" +
+                "          schema:\n" +
+                "            $ref: '#/definitions/foo'\n" +
+                "      responses:\n" +
+                "        200:\n" +
+                "          schema:\n" +
+                "            $ref: '#/definitions/foo'\n" +
+                "definitions:\n" +
+                "  foo:\n" +
+                "    type: object\n" +
+                "    properties:\n" +
+                "      id:\n" +
+                "        type: string\n" +
+                "    required:\n" +
+                "      - id\n";
+        SwaggerParser parser = new SwaggerParser();
+        Swagger swagger = parser.parse(yaml);
+        List<Parameter> parameters = swagger.getPath("/foos/{id}").getPut().getParameters();
+        assertTrue(parameters.size() == 2);
+    }
+
+    @Test
     public void testLoadRelativeFileTree_Json() throws Exception {
         final Swagger swagger = doRelativeFileTest("src/test/resources/relative-file-references/json/parent.json");
         //Json.mapper().writerWithDefaultPrettyPrinter().writeValue(new File("resolved.json"), swagger);
+    }
+
+    @Test
+    public void testLoadExternalNestedDefinitions() throws Exception {
+        SwaggerParser parser = new SwaggerParser();
+        final Swagger swagger = parser.read("src/test/resources/nested-references/b.yaml");
+        Map<String, Model> definitions = swagger.getDefinitions();
+        assertTrue(definitions.containsKey("x"));
+        assertTrue(!definitions.containsKey("y"));
+        assertTrue(definitions.containsKey("z"));
+        assertEquals(((RefModel) definitions.get("i")).get$ref(), "#/definitions/k");
     }
 
     @Test
@@ -102,6 +203,15 @@ public class SwaggerParserTest {
         SwaggerDeserializationResult result = parser.readWithInfo("src/test/resources/petstore.json", null, true);
 
         assertNotNull(result);
+    }
+
+    @Test
+    public void testFileReferenceWithVendorExt() throws Exception {
+        SwaggerParser parser = new SwaggerParser();
+        final Swagger swagger = parser.read("src/test/resources/file-reference-with-vendor-ext/b.yaml");
+        Map<String, Model> definitions = swagger.getDefinitions();
+        assertTrue(definitions.get("z").getVendorExtensions().get("x-foo") instanceof ObjectNode);
+        assertTrue(definitions.get("x").getVendorExtensions().get("x-foo") instanceof ObjectNode);
     }
 
     @Test
@@ -116,6 +226,18 @@ public class SwaggerParserTest {
                 "src/test/resources/relative-file-references/yaml");
         final Swagger swagger = doRelativeFileTest("src/test/resources/relative-file-references/yaml/parent.yaml");
         assertNotNull(Yaml.mapper().writeValueAsString(swagger));
+    }
+
+    @Test(enabled = false)
+    public void testLoadRecursiveExternalDef() throws Exception {
+        SwaggerParser parser = new SwaggerParser();
+        final Swagger swagger = parser.read("src/test/resources/file-reference-to-recursive-defs/b.yaml");
+
+        Json.prettyPrint(swagger);
+        Map<String, Model> definitions = swagger.getDefinitions();
+        assertEquals(((RefProperty) ((ArrayProperty) definitions.get("v").getProperties().get("children")).getItems()).get$ref(), "#/definitions/v");
+        assertTrue(!definitions.containsKey("y"));
+        assertEquals(((RefProperty) ((ArrayProperty) definitions.get("x").getProperties().get("children")).getItems()).get$ref(), "#/definitions/x");
     }
 
     @Test
